@@ -277,6 +277,18 @@ class AlertsPlugin {
     };
   }
 
+  getSnsInvokePermissionCF(notification) {
+    return {
+      Type: 'AWS::Lambda::Permission',
+      Properties: {
+        Action: 'lambda:invokeFunction',
+        FunctionName: notification.functionName,
+        Principal: 'sns.amazonaws.com',
+        SourceArn: notification.endpoint,
+      },
+    };
+  }
+
   _addAlertTopic(key, topics, alertTopics, customAlarmName) {
     const topicConfig = topics[key];
     const isTopicConfigAnObject = isObject(topicConfig);
@@ -316,6 +328,16 @@ class AlertsPlugin {
         this.addCfResources({
           [cfRef]: this.getSnsTopicCloudFormation(topic, notifications),
         });
+
+        const lambdaPermissionRef = `${cfRef}InvokePermission`;
+        for (const notification of notifications) {
+          if (notification.protocol === 'lambda') {
+            this.addCfResources({
+              [lambdaPermissionRef]:
+                this.getSnsInvokePermissionCF(notification),
+            });
+          }
+        }
       }
     }
   }
