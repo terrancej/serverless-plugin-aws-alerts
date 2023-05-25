@@ -13,7 +13,7 @@
     "postpublish": "pinst --enable"
   },
   "repository": {
-    "url": "https://github.com/ACloudGuru/serverless-plugin-aws-alerts.git",
+    "url": "https://github.com/terrancej/serverless-plugin-aws-alerts.git",
     "type": "git"
   },
   "author": "John McKim <john@acloud.guru>",
